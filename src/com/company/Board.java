@@ -40,8 +40,8 @@ public class Board {
         myBoard[row][column] = 'X';
     }
 
-    public void unmove(int row, int column){
-        myBoard[row][column] = (char) ((row * 3) + 49);
+    public void unmove(int row, int column, int number){
+        myBoard[row][column] = (char) (number + 49);
     }
 
     public boolean isOpen(int row, int column){

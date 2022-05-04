@@ -89,113 +89,127 @@ public class TTTv3 {
     }
 
     private void move(String token, String type){
-        int position = 1, row, column;
+        int position = 0, row = 0, column = 0;
 
-        if(type.equalsIgnoreCase("AI")){
-            killerMove(token);
+        if(type.equalsIgnoreCase("AI") && token.equalsIgnoreCase("X")){
+            killerMoveX();
         }
-        else{
+        else if(type.equalsIgnoreCase("AI") && token.equalsIgnoreCase("O")){
+            killerMoveO();
+        }
+        else if(type.equalsIgnoreCase("Player")){
             position = validIntegerInput();
-        }
-
-        row = (position - 1) / 3;
-        column = (position - 1) % 3;
-        while(!board.isOpen(row, column)) {
-
-            if (type.equalsIgnoreCase("Player")){
-                System.out.println("Sorry, the place you have chosen is taken, please choose another spot!");
-                position = validIntegerInput();
-            }
-            else{
-                killerMove(token);
-            }
             row = (position - 1) / 3;
             column = (position - 1) % 3;
-        }
 
-        if(token.equalsIgnoreCase("X")){
-            board.placeX(row, column);
-        }
-        else{
-            board.placeO(row, column);
+            while(!board.isOpen(row, column)){
+                System.out.println("Sorry, the place you have chosen is taken, please choose another spot!");
+                position = validIntegerInput();
+
+                row = (position - 1) / 3;
+                column = (position - 1) % 3;
+            }
+
+            if(token.equalsIgnoreCase("X")){
+                board.placeX(row, column);
+            }
+            else{
+                board.placeO(row, column);
+            }
         }
     }
 
-    private void killerMove(String AIToken){
+    private void killerMoveX(){
         int row, column, position;
-        boolean win = false;
-        if(AIToken.equalsIgnoreCase("X")){
-            for(int i = 0 ; i < 9 && !win ; i++){
-                row = i / 3;
-                column = i % 3;
-                if(board.isOpen(row, column)){
-                    board.placeX(row, column);
-                    if(board.winX()){
-                        win = true;
-                    }
-                    else{
-                        board.unmove(row, column);
-                    }
+
+        for(int i = 0 ; i < 9 ; i++){
+            row = i / 3;
+            column = i % 3;
+
+            if(board.isOpen(row, column)){
+                board.placeX(row, column);
+                if(board.winX()){
+                    i = 10;
+                }
+                else{
+                    board.unmove(row, column, i);
                 }
             }
-            if(!win){
-                for(int i = 0 ; i < 9 && !win ; i++){
-                    row = i / 3;
-                    column = i % 3;
-                    if(board.isOpen(row, column)){
-                        board.placeO(row, column);
-                        if(board.winO()){
-                            board.unmove(row, column);
-                            board.placeX(row, column);
-                            win = true;
-                        }
-                        else{
-                            board.unmove(row, column);
-                            position = random.nextInt(9) + 1;
-                            row = i / 3;
-                            column = i % 3;
-                            board.placeO(row, column);
-                        }
+        }
+
+        boolean ok = false;
+
+        if(!board.winX()){
+            for(int i = 0 ; i < 9 ; i++){
+                row = i / 3;
+                column = i % 3;
+
+                if(board.isOpen(row, column)){
+                    board.placeO(row, column);
+                    if(board.winO()){
+                        board.placeX(row, column);
+                        i = 10;
+                        ok = true;
+                    }
+                    else{
+                        board.unmove(row, column, i);
                     }
                 }
             }
         }
-        else if(AIToken.equalsIgnoreCase("O")){
-            for(int i = 0 ; i < 9 && !win ; i++){
+
+        if(!ok){
+            position = random.nextInt(9) + 1;
+            row = (position - 1) / 3;
+            column = (position - 1) % 3;
+            board.placeX(row, column);
+        }
+    }
+
+    private void killerMoveO(){
+        int row, column, position;
+
+        for(int i = 0 ; i < 9 ; i++){
+            row = i / 3;
+            column = i % 3;
+
+            if(board.isOpen(row, column)){
+                board.placeO(row, column);
+                if(board.winO()){
+                    i = 10;
+                }
+                else{
+                    board.unmove(row, column, i);
+                }
+            }
+        }
+
+        boolean ok = false;
+
+        if(!board.winO()){
+            for(int i = 0 ; i < 9 ; i++){
                 row = i / 3;
                 column = i % 3;
+
                 if(board.isOpen(row, column)){
-                    board.placeO(row, column);
-                    if(board.winO()){
-                        win = true;
+                    board.placeX(row, column);
+                    if(board.winX()){
+                        board.placeO(row, column);
+                        i = 10;
+                        ok = true;
                     }
                     else{
-                        board.unmove(row, column);
+                        board.unmove(row, column, i);
                     }
                 }
             }
-            if(!win){
-                for(int i = 0 ; i < 9 && !win ; i++){
-                    row = i / 3;
-                    column = i % 3;
-                    if(board.isOpen(row, column)){
-                        board.placeX(row, column);
-                        if(board.winX()){
-                            board.unmove(row, column);
-                            board.placeO(row, column);
-                            win = true;
-                        }
-                        else{
-                            board.unmove(row, column);
-                            position = random.nextInt(9) + 1;
-                            row = i / 3;
-                            column = i % 3;
-                            board.placeO(row, column);
-                            win = true;
-                        }
-                    }
-                }
-            }
+        }
+
+        if(!ok){
+            position = random.nextInt(9) + 1;
+            row = (position - 1) / 3;
+            column = (position - 1) % 3;
+            board.placeO(row, column);
         }
     }
 }
