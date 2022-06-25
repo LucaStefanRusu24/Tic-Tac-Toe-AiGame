@@ -64,6 +64,10 @@ public class TTTv1 {
     private void move(String token){
         int position, row = 0, column = 0;
         position = validIntegerInput();
+        while(position > 9 || position < 1){
+            System.out.println("This position does not exist on the board, please choose again");
+            position = validIntegerInput();
+        }
         row = (position - 1) / 3;
         column = (position - 1) % 3;
         while(!board.isOpen(row, column)){

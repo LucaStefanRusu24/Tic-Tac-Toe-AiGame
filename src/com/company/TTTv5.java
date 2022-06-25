@@ -3,14 +3,14 @@ package com.company;
 import java.util.Random;
 import java.util.Scanner;
 
-public class TTTv3 {
+public class TTTv5 {
 
     static Scanner scan = new Scanner(System.in);
     static Random random = new Random();
 
     private Board board;
 
-    public TTTv3(){
+    public TTTv5(){
         board = new Board();
         board.reset();
     }
@@ -166,10 +166,7 @@ public class TTTv3 {
         }
 
         if(!ok){
-            position = random.nextInt(9) + 1;
-            row = (position - 1) / 3;
-            column = (position - 1) % 3;
-            board.placeX(row, column);
+            findBestMove('X');
         }
     }
 
@@ -216,9 +213,40 @@ public class TTTv3 {
         }
 
         if(!ok){
-            position = random.nextInt(9) + 1;
-            row = (position - 1) / 3;
-            column = (position - 1) % 3;
+            findBestMove('O');
+        }
+    }
+
+    private void findBestMove(char token){
+        int biggest = -1000, bestMove = 0, row, column;
+        for(int i = 0 ; i < 9 ; i++){
+            row = i / 3;
+            column = i % 3;
+
+            if(board.isOpen(row, column)){
+                if(token == 'X'){
+                    board.placeX(row, column);
+                    if(board.minimax('X', 0, false) > biggest){
+                        biggest = board.minimax('X', 0, false);
+                        bestMove = i;
+                    }
+                }
+                else{
+                    board.placeO(row, column);
+                    if(board.minimax('O', 0, false) > biggest){
+                        biggest = board.minimax('O', 0, false);
+                        bestMove = i;
+                    }
+                }
+                board.unmove(row, column, i);
+            }
+        }
+        row = bestMove / 3;
+        column = bestMove % 3;
+        if(token == 'X'){
+            board.placeX(row, column);
+        }
+        else{
             board.placeO(row, column);
         }
     }

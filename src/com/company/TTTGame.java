@@ -18,7 +18,7 @@ public class TTTGame {
                     "\n2 - PLAYER VS COMPUTER (RANDOM MOVES)" +
                     "\n3 - PLAYER VS COMPUTER (KILLER MOVE)" +
                     "\n4 - PLAYER VS COMPUTER (BOARD EVALUATOR)" +
-                    "\n5 - PLAYER VS COMPUTER (MINMAX ALGORITHM)" +
+                    "\n5 - PLAYER VS COMPUTER (MINIMAX ALGORITHM)" +
                     "\n6 - QUIT");
 
             System.out.println("Please enter your choice: ");
@@ -41,9 +41,13 @@ public class TTTGame {
                     break;
 
                 case 4:
+                    TTTv4 game4 = new TTTv4();
+                    game4.play();
                     break;
 
                 case 5:
+                    TTTv5 game5 = new TTTv5();
+                    game5.play();
                     break;
 
                 case 6:
